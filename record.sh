@@ -9,7 +9,8 @@ set -euo pipefail
 
 payload="$(cat)"
 
-BASE_DIR="$HOME/r/history/$(hostname -s)/claude"
+HOSTNAME_CLEAN="$(hostname -s | tr -cd 'a-zA-Z0-9_-')"
+BASE_DIR="$HOME/r/history/$HOSTNAME_CLEAN/claude"
 MAX_STRING_LEN=200
 
 # Date-partitioned path (UTC)
@@ -21,7 +22,7 @@ mkdir -p "$dir"
 # Long strings (file content, edit diffs) are truncated to keep records compact
 echo "$payload" | jq -c \
   --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-  --arg hn "$(hostname -s)" \
+  --arg hn "$HOSTNAME_CLEAN" \
   --arg gb "$(git -C "$PWD" branch --show-current 2>/dev/null || echo '')" \
   --argjson max "$MAX_STRING_LEN" \
   '{
