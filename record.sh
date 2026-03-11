@@ -2,14 +2,14 @@
 #
 # PostToolUse hook: records tool usage to date-partitioned JSONL files.
 # Reads JSON payload from stdin with fields: tool_name, tool_input, cwd
-# Writes to ~/r/history/claude/YYYYMM/dd.jsonl
+# Writes to ~/r/history/<hostname>/claude/YYYYMM/dd.jsonl
 #
 
 set -euo pipefail
 
 payload="$(cat)"
 
-BASE_DIR="$HOME/r/history/claude"
+BASE_DIR="$HOME/r/history/$(hostname -s)/claude"
 MAX_STRING_LEN=200
 
 # Date-partitioned path (UTC)
